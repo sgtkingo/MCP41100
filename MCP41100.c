@@ -1,10 +1,6 @@
 #include "PICF18LF46K22_ConfigSFR.h"
 #include "MCP41100_FunctionLib.h"
 
-#define LED LATDbits.LATD0
-
-#define CS_PIN 0b00100000 //RA5
-
 //declared init fce
 void InitDevice(){
     OSCCON=0b01111100; //osc setting, 16 MHz, internal by FOSCH
@@ -12,10 +8,15 @@ void InitDevice(){
     ANSELD=0x00;
     TRISD=0x00;
     
-    //Config CS
-    ANSELAbits.ANSA5=0;
-    TRISAbits.RA5=0;
-    PORTAbits.RA5=0;
+    //CS for 8x8LEDMATRIX
+    ANSELAbits.ANSA0=0;
+    TRISAbits.RA0=0;
+    PORTAbits.RA0=1;
+    
+    //CS for MCP41100
+    ANSELAbits.ANSA1=0;
+    TRISAbits.RA1=0;
+    PORTAbits.RA1=1;
 }
 //declared clear fce
 void ClearDevice(){
@@ -34,6 +35,9 @@ void main(void) {
     InitDevice();
     ClearDevice();
     TestDevice();
+
+    SPI_SET_CS(&PORTA,0b00000001,1); //RA0, 8x8LEDMATRIX
+    SPI_SET_CS(&PORTA,0b00000010,1); //RA1, MCP41100
     
     Init_MCP41100(&PORTA,CS_PIN); //Set PORTA as CS manage port,pin
     //Send_Data_MCP41100(CMD_WRITE_PT0_MCP41xxx,0x7F);

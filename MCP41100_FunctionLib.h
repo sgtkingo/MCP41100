@@ -32,6 +32,7 @@
 #define	MCP41100_FUNCTION_LIB
 
 #include "SPI_PICLIB.h"
+#define CS_PIN 0b00000010 //RA1
 
 #define CMD_WRITE_ALL_MCP41xxx 0b00010011
 #define CMD_WRITE_PT0_MCP41xxx 0b00010001
@@ -55,7 +56,6 @@ void Init_MCP41100(unsigned char const *port_cs, unsigned char const cs_pin_valu
     SPI_SET_CS(PORT_CS,PIN_CS,1);
     
     SPI_INIT();
-    SPI_PAUSE(1000);
     
     Send_Data_MCP41100(CMD_WRITE_PT0_MCP41xxx,0x00);
 }
